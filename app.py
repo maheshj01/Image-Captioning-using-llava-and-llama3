@@ -32,9 +32,26 @@ if chat_input:= st.chat_input("Ask Questions about the Image"):
 # caption_prompt = st.text_area("Caption Prompt", "Please generate a caption for this image.")
 if uploaded_file is None:
     st.stop()
-with st.status("Generating Image Caption..."):
-    stream = generate_image_desc(uploaded_file, llava_model, chat_input)
+describe_prompt = "What do you see in this image?"
+reading = True
+response_str =''
+with st.status("Reading the Image..."):
+    stream = generate_image_desc(uploaded_file, llava_model, describe_prompt)
     response = stream_parser(stream)
     st.write(response)
+    response_str = ''.join(response)
+
+if(len(response_str) > 0):
+    reading = False
+
+if(reading):
+    st.stop()
+with st.status("Generating Caption..."):
+    caption_prompt = "Please generate a caption for this image using this description" + response_str
+    caption_stream = generate_image_desc(uploaded_file, llama_model, caption_prompt)
+    caption_response = stream_parser(caption_stream)
+    st.write(caption_response)
+
+
     # caption_stream = generate_image_desc(uploaded_file, llama_model, caption_prompt)
     # caption_response = stream_parser(caption_stream)
