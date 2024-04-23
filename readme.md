@@ -18,7 +18,21 @@ llava generates the description of the image and the description is the fed to l
    pip install -r requirements.txt
    ```
 
-3. Run the code
+3. Download the llms using the following command
+
+   ```sh
+   ollama pull llama3
+   ollama pull llava
+   ```
+
+4. Start the local ollama server
+
+   ```sh
+   ollama serve
+   ```
+
+5. Run the code
+
    ```sh
    streamlit run app.py
    ```
