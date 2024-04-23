@@ -1,6 +1,6 @@
 import streamlit as st
 from config import Config
-from utils.llm_utils import generate_image_desc, stream_parser
+from utils.llm_utils import generate_image_desc, stream_parser, generate_caption
 # from utils.image_utils import create_temp_file
 
 page_title = Config.page_title
@@ -26,15 +26,18 @@ llama_model = Config.ollama_models[0]
 
 if chat_input:= st.chat_input("Ask Questions about the Image"):
     if uploaded_file is None:
-        st.error("Please upload an image file.")
+        with st.status("Thinking..."):
+            stream = generate_caption(llama_model, chat_input)
+            response = stream_parser(stream)
+            st.write(response)
         st.stop()
 
-# caption_prompt = st.text_area("Caption Prompt", "Please generate a caption for this image.")
 if uploaded_file is None:
     st.stop()
 describe_prompt = "What do you see in this image?"
 reading = True
 response_str =''
+
 with st.status("Reading the Image..."):
     stream = generate_image_desc(uploaded_file, llava_model, describe_prompt)
     response = stream_parser(stream)
@@ -44,14 +47,9 @@ with st.status("Reading the Image..."):
 if(len(response_str) > 0):
     reading = False
 
-if(reading):
-    st.stop()
+print(response_str)
 with st.status("Generating Caption..."):
-    caption_prompt = "Please generate a caption for this image using this description" + response_str
-    caption_stream = generate_image_desc(uploaded_file, llama_model, caption_prompt)
+    caption_prompt = "Please generate a caption for this image using this description:" + response_str
+    caption_stream = generate_caption(llama_model, caption_prompt)
     caption_response = stream_parser(caption_stream)
     st.write(caption_response)
-
-
-    # caption_stream = generate_image_desc(uploaded_file, llama_model, caption_prompt)
-    # caption_response = stream_parser(caption_stream)

@@ -9,6 +9,10 @@ def generate_image_desc(image_file, model, user_prompt):
     stream = generate(model=model,prompt=user_prompt, images=[image_bytes], stream=True)
     return stream
 
+def generate_caption(model, prompt):
+    stream = generate(model=model, prompt=prompt, stream=True)
+    return stream
+
 # handles stream response back from LLM
 def stream_parser(stream):
     for data in stream:
