@@ -9,7 +9,7 @@ def generate_image_desc(image_file, model, user_prompt):
     stream = generate(model=model,prompt=user_prompt, images=[image_bytes], stream=True)
     return stream
 
-def generate_caption(model, prompt):
+def generate_response(model, prompt):
     stream = generate(model=model, prompt=prompt, stream=True)
     return stream
 
