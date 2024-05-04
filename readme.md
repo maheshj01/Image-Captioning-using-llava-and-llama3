@@ -31,7 +31,13 @@ llava generates the description of the image and the description is the fed to l
    ollama serve
    ```
 
-5. Run the code
+5. Run the backend server
+
+   ```sh
+   uvicorn main:app --reload
+   ```
+
+6. Run the code
 
    ```sh
    streamlit run app.py
